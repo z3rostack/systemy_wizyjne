@@ -1,0 +1,2 @@
+- [ ] run lint
+- [ ] check whether functions are implemented correctly, including type hints, and follow the intended architecture
