@@ -1,0 +1,7 @@
+[project]
+name = "Task4"
+version = "0.1.0"
+description = "App for task4"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = ["pyside6", "opencv-python", "numpy"]
