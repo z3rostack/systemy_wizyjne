@@ -141,16 +141,48 @@ class Model:
 
     def low_pass_matrix(self) -> np.ndarray:
         return np.array([[1, 1, 1],
-                         [1, 0, 1],
+                         [1, 1, 1],
                          [1, 1, 1]])
     
     def high_pass_matrix(self) -> np.ndarray:
-        return np.array([[0, -1, 0],
-                            [-1, 4, -1],
-                            [0, -1, 0]])
+        return np.array([[-1, -1, -1],
+                         [-1, 9, -1],
+                         [-1, -1, -1]])
+
+
+    def prewit_matrix(self) -> np.ndarray:
+        return np.array([[-1, -1, -1],
+                         [0, 0, 0],
+                         [1, 1, 1]])
+    
+    def sobel_matrix(self) -> np.ndarray:
+        return np.array([[1, 2, 1],
+                         [0, 0, 0],
+                         [-1, -2, -1]])
+    
+    def gaussian_matrix(self) -> np.ndarray:
+        return np.array([[1, 2, 1],
+                         [2, 4, 2],
+                         [1, 2, 1]])
+    
+    def laplace_matrix(self) -> np.ndarray:
+        return np.array([[0, 1, 0],
+                         [1, -4, 1],
+                         [0, 1, 0]])
         
-    def filter_buffer2(self, kernel: np.ndarray):
-        self._buffer3 = cv2.filter2D(self._buffer2, -1, kernel)
+    def filter_buffer2(self, kernel: np.ndarray, grayscale: bool = False, offset: int = 0):
+        sum = kernel.sum()        
+        if sum != 0:
+            kernel = kernel / sum
+
+        image = self._buffer2.copy()
+
+        if grayscale:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        image = cv2.filter2D(image, -1, kernel)
+
+        self._buffer3 = cv2.add(image, offset)
 
     def threshold_buffer2(self, threshold: int = 128):
         _, self._buffer3 = cv2.threshold(self._buffer2, threshold, 255, cv2.THRESH_BINARY)

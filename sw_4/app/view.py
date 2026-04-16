@@ -103,3 +103,6 @@ class MainWindowView:
     
     def get_mono(self):
         return self.view.mono_checkbox.isChecked()
+    
+    def get_threshold_value(self) -> int:
+        return int(self.view.threshold_spinbox.value())

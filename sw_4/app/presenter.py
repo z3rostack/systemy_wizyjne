@@ -6,6 +6,13 @@ class MainWindowPresenter:
         self.view = view
         self.model = model
 
+        # Init view with model data
+        self.view.set_left_image(self.model.left_image)
+        self.view.set_right_image(self.model.right_image)
+        self.view.set_buffer1_image(self.model.buffer1)
+        self.view.set_buffer2_image(self.model.buffer2)
+        self.view.set_buffer3_image(self.model.buffer3)
+
         # Setup slots
         self.view.view.left_file_image.clicked.connect(self.load_left_image)
         self.view.view.right_file_image.clicked.connect(self.load_right_image)
@@ -34,6 +41,11 @@ class MainWindowPresenter:
 
         self.view.view.low_pass_button.clicked.connect(self.low_pass)
         self.view.view.high_pass_button.clicked.connect(self.high_pass)
+        self.view.view.sobel_button.clicked.connect(self.sobel)
+        self.view.view.prewit_button.clicked.connect(self.prewit)
+        self.view.view.gauss_button.clicked.connect(self.gaussian)
+        self.view.view.laplace_button.clicked.connect(self.laplace)
+
         self.view.view.filter_button.clicked.connect(self.filter)
         self.view.view.threshold_button.clicked.connect(self.threshold)
         self.view.view.dilate_button.clicked.connect(self.dilate)
@@ -86,7 +98,6 @@ class MainWindowPresenter:
         self.model.transform(operation)
         self.view.set_buffer3_image(self.model.buffer3)
 
-
     def low_pass(self):
         mat = self.model.low_pass_matrix()
         self.view.show_matrix(mat)
@@ -95,14 +106,32 @@ class MainWindowPresenter:
         mat = self.model.high_pass_matrix()
         self.view.show_matrix(mat)
 
+    def sobel(self):
+        mat = self.model.sobel_matrix()
+        self.view.show_matrix(mat)
+
+    def prewit(self):
+        mat = self.model.prewit_matrix()
+        self.view.show_matrix(mat)
+
+    def gaussian(self):
+        mat = self.model.gaussian_matrix()
+        self.view.show_matrix(mat)
+
+    def laplace(self):
+        mat = self.model.laplace_matrix()
+        self.view.show_matrix(mat)
+
     def filter(self):
         mat = self.view.get_matrix()
-        self.model.filter_buffer2(mat)
+        mono = self.view.get_mono()
+        offset = self.view.get_threshold_value()
+
+        self.model.filter_buffer2(mat, grayscale=mono, offset=offset)
         self.view.set_buffer3_image(self.model.buffer3)
 
     def threshold(self):
-        #hreshold_value = self.view.get_threshold_value()
-        threshold_value = 128
+        threshold_value = self.view.get_threshold_value()
         self.model.threshold_buffer2(threshold_value)
         self.view.set_buffer3_image(self.model.buffer3)
 
