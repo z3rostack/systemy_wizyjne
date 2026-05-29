@@ -106,3 +106,12 @@ class MainWindowView:
     
     def get_threshold_value(self) -> int:
         return int(self.view.threshold_spinbox.value())
+    
+    def get_thresholds_value(self) -> int:
+        red_lower = int(self.view.red_lthreshold.value())
+        red_upper = int(self.view.red_uthreshold.value())
+        green_lower = int(self.view.green_lthreshold.value())
+        green_upper = int(self.view.green_uthreshold.value())
+        blue_lower = int(self.view.blue_lthreshold.value())
+        blue_upper = int(self.view.blue_uthreshold.value())
+        return (red_lower, red_upper, green_lower, green_upper, blue_lower, blue_upper)

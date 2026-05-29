@@ -23,6 +23,9 @@ class MainWindowPresenter:
         self.view.view.left_camera_image.clicked.connect(self.load_left_image_from_camera)
         self.view.view.right_camera_image.clicked.connect(self.load_right_image_from_camera)
 
+        self.view.view.left_draw_button.clicked.connect(self.draw_left_image)
+        self.view.view.right_draw_button.clicked.connect(self.draw_right_image)
+
         self.view.view.left_to_buf1.clicked.connect(lambda: self.copy_buf(self.model.LEFT, self.model.BUFFER1))
         self.view.view.buf1_to_left.clicked.connect(lambda: self.copy_buf(self.model.BUFFER1, self.model.LEFT))
         self.view.view.left_to_buf2.clicked.connect(lambda: self.copy_buf(self.model.LEFT, self.model.BUFFER2))
@@ -47,9 +50,13 @@ class MainWindowPresenter:
         self.view.view.laplace_button.clicked.connect(self.laplace)
 
         self.view.view.filter_button.clicked.connect(self.filter)
-        self.view.view.threshold_button.clicked.connect(self.threshold)
+        self.view.view.to_gray_button.clicked.connect(self.to_grayscale)
         self.view.view.dilate_button.clicked.connect(self.dilate)
         self.view.view.erode_button.clicked.connect(self.erode)
+
+        self.view.view.th_button.clicked.connect(self.threshold_colors)
+        self.view.view.open_button.clicked.connect(self.open)
+        self.view.view.close_button.clicked.connect(self.close)
 
     def clear_left_image(self):
         self.model.clear_left_image()
@@ -79,6 +86,14 @@ class MainWindowPresenter:
         self.model.capture_right_image_from_camera()
         self.view.set_right_image(self.model.right_image)
 
+    def draw_left_image(self):
+        self.model.draw_image(self.model.LEFT)
+        self.view.set_left_image(self.model.left_image)
+
+    def draw_right_image(self):
+        self.model.draw_image(self.model.RIGHT)
+        self.view.set_right_image(self.model.right_image)
+
     def copy_buf(self, src: str, dst: str):
         self.model.copy_buf(src, dst)
         match dst:
@@ -99,40 +114,38 @@ class MainWindowPresenter:
         self.view.set_buffer3_image(self.model.buffer3)
 
     def low_pass(self):
-        mat = self.model.low_pass_matrix()
+        mat = self.model.gen_matrix("low_pass")
         self.view.show_matrix(mat)
 
     def high_pass(self):
-        mat = self.model.high_pass_matrix()
+        mat = self.model.gen_matrix("high_pass")
         self.view.show_matrix(mat)
 
     def sobel(self):
-        mat = self.model.sobel_matrix()
+        mat = self.model.gen_matrix("sobel")
         self.view.show_matrix(mat)
 
     def prewit(self):
-        mat = self.model.prewit_matrix()
+        mat = self.model.gen_matrix("prewit")
         self.view.show_matrix(mat)
 
     def gaussian(self):
-        mat = self.model.gaussian_matrix()
+        mat = self.model.gen_matrix("gaussian")
         self.view.show_matrix(mat)
 
     def laplace(self):
-        mat = self.model.laplace_matrix()
+        mat = self.model.gen_matrix("laplace")
         self.view.show_matrix(mat)
 
     def filter(self):
         mat = self.view.get_matrix()
-        mono = self.view.get_mono()
-        offset = self.view.get_threshold_value()
+        equalize = self.view.get_add()
 
-        self.model.filter_buffer2(mat, grayscale=mono, offset=offset)
+        self.model.filter_buffer2(mat, equalize)
         self.view.set_buffer3_image(self.model.buffer3)
 
-    def threshold(self):
-        threshold_value = self.view.get_threshold_value()
-        self.model.threshold_buffer2(threshold_value)
+    def to_grayscale(self):
+        self.model.to_grayscale()
         self.view.set_buffer3_image(self.model.buffer3)
 
     def dilate(self):
@@ -141,6 +154,20 @@ class MainWindowPresenter:
 
     def erode(self):
         self.model.erode_buffer2()
+        self.view.set_buffer3_image(self.model.buffer3)
+
+    def threshold_colors(self):
+        thresholds = self.view.get_thresholds_value()
+
+        self.model.color_threshold_buffer2(*thresholds)
+        self.view.set_buffer3_image(self.model.buffer3)
+
+    def open(self):
+        self.model.open_buffer2()
+        self.view.set_buffer3_image(self.model.buffer3)
+
+    def close(self):
+        self.model.close_buffer2()
         self.view.set_buffer3_image(self.model.buffer3)
 
 

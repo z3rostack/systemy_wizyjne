@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>938</width>
-    <height>473</height>
+    <width>978</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,11 +25,11 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>920</width>
+      <width>960</width>
       <height>409</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_13">
+    <layout class="QVBoxLayout" name="verticalLayout_10">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
@@ -59,6 +59,13 @@
              </property>
              <property name="text">
               <string>Camera</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="left_draw_button">
+             <property name="text">
+              <string>Draw</string>
              </property>
             </widget>
            </item>
@@ -351,6 +358,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="right_draw_button">
+             <property name="text">
+              <string>Draw</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="right_clear_image">
              <property name="maximumSize">
               <size>
@@ -389,7 +403,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_12">
          <item>
@@ -523,9 +537,9 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QPushButton" name="threshold_button">
+          <widget class="QPushButton" name="to_gray_button">
            <property name="text">
-            <string>Threshold</string>
+            <string>Grayscale</string>
            </property>
           </widget>
          </item>
@@ -564,50 +578,110 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_10">
-           <item>
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_5">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Orientation::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Green</string>
+           </property>
+          </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="blue_lthreshold">
+           <property name="maximum">
+            <number>255</number>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QSpinBox" name="red_uthreshold">
+           <property name="maximum">
+            <number>255</number>
            </property>
-          </spacer>
+           <property name="value">
+            <number>255</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="red_lthreshold">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QSpinBox" name="green_uthreshold">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+           <property name="value">
+            <number>255</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QSpinBox" name="blue_uthreshold">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+           <property name="value">
+            <number>255</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Blue</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Red</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="green_lthreshold">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="th_button">
+           <property name="text">
+            <string>Threshold</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pushButton">
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="open_button">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="close_button">
+           <property name="text">
+            <string>Close</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -621,7 +695,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>938</width>
+     <width>978</width>
      <height>22</height>
     </rect>
    </property>
