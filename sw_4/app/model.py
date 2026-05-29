@@ -202,23 +202,6 @@ class Model:
         output = np.clip(output, 0, 255)
         return np.uint8(output)
 
-    def filter_buffer2_opencv(self, kernel: np.ndarray, equalize: bool = False):
-        sum = kernel.sum()
-        if sum != 0:
-            kernel = kernel / sum
-
-        print(f"Kernel:\n{kernel}")
-
-        image = self._buffer2.copy()
-
-        image = cv2.filter2D(image, -1, kernel)
-
-        if equalize:
-            image = image // 2
-            image += 128
-
-        self._buffer3 = image
-
     def filter_buffer2(self, kernel: np.ndarray, equalize: bool = False):
         input_image = self._buffer2.copy()
         output_image = self._create_blank_image()
@@ -243,9 +226,8 @@ class Model:
         grayscale = (0.299 * r + 0.587 * g + 0.114 * b).astype(np.uint8)
         self._buffer3 = np.stack([grayscale, grayscale, grayscale], axis=2)
 
-    def dilate_buffer2(self):        
-        input_image = self._buffer2.copy()
-        output_image = self._buffer2.copy()
+    def dilate(self, input_image: np.ndarray):        
+        output_image = self._create_blank_image()
 
         h, w, c = np.shape(input_image)
 
@@ -255,11 +237,10 @@ class Model:
                     sub = input_image[y:y+3, x:x+3, ch]
                     output_image[y+1, x+1, ch] = np.max(sub)
 
-        self._buffer3 = output_image
+        return output_image
 
-    def erode_buffer2(self):
-        input_image = self._buffer2.copy()
-        output_image = self._buffer2.copy()
+    def erode(self, input_image: np.ndarray):
+        output_image = self._create_blank_image()
 
         h, w, c = np.shape(input_image)
 
@@ -269,7 +250,7 @@ class Model:
                     sub = input_image[y:y+3, x:x+3, ch]
                     output_image[y+1, x+1, ch] = np.min(sub)
 
-        self._buffer3 = output_image
+        return output_image
 
     def color_threshold_buffer2(self, r_lthreshold: int = 0, r_uthreshold: int = 255, g_lthreshold: int = 0, g_uthreshold: int = 255, b_lthreshold: int = 0, b_uthreshold: int = 255):
             input_image = self._buffer2.copy()
@@ -280,15 +261,17 @@ class Model:
             for y in range(h):
                 for x in range(w):
                     b, g, r = input_image[y,x]
-                    if r_lthreshold <= r <= r_uthreshold and g_lthreshold <= g <= g_uthreshold and b_lthreshold <= b <= b_uthreshold:
+                    if r_lthreshold < r <= r_uthreshold or g_lthreshold < g <= g_uthreshold or b_lthreshold < b <= b_uthreshold:
                         output_image[y,x] = [255, 255, 255]
                     else:
                         output_image[y,x] = [0, 0, 0]
     
             self._buffer3 = output_image
 
-    def open_buffer2(self):
-        pass
+    def open(self, input_image: np.ndarray):
+        output_image = self.dilate(self.erode(input_image))
+        return output_image
 
-    def close_buffer2(self):
-        pass
+    def close(self, input_image: np.ndarray):    
+        output_image = self.erode(self.dilate(input_image))
+        return output_image

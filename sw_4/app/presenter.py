@@ -149,11 +149,11 @@ class MainWindowPresenter:
         self.view.set_buffer3_image(self.model.buffer3)
 
     def dilate(self):
-        self.model.dilate_buffer2()
+        self.model._buffer3 = self.model.dilate(self.model.buffer2)
         self.view.set_buffer3_image(self.model.buffer3)
 
     def erode(self):
-        self.model.erode_buffer2()
+        self.model._buffer3 = self.model.erode(self.model.buffer2)
         self.view.set_buffer3_image(self.model.buffer3)
 
     def threshold_colors(self):
@@ -163,11 +163,11 @@ class MainWindowPresenter:
         self.view.set_buffer3_image(self.model.buffer3)
 
     def open(self):
-        self.model.open_buffer2()
-        self.view.set_buffer3_image(self.model.buffer3)
+        self.model._buffer3 = self.model.open(self.model.buffer2)
+        self.view.set_buffer3_image(self.model._buffer3 )
 
     def close(self):
-        self.model.close_buffer2()
-        self.view.set_buffer3_image(self.model.buffer3)
+        self.model._buffer3 = self.model.close(self.model.buffer2)
+        self.view.set_buffer3_image(self.model._buffer3 )
 
 
