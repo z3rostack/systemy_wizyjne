@@ -13,7 +13,7 @@ def main():
     view = View(ui_path)
     model = Model()
     presenter = Presenter(model, view)
-    view.window.show()
+    view.show()
     sys.exit(app.exec())
 
 

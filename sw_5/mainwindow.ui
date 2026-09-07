@@ -6,31 +6,134 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>991</width>
+    <height>628</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Hello — press the button</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>Click me</string>
-      </property>
-     </widget>
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="open_file_button">
+          <property name="text">
+           <string>Open file</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clear_button">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="x_label">
+          <property name="text">
+           <string>X:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="x_pos_label">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="y_label">
+          <property name="text">
+           <string>Y:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="y_pos_label">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="r_label">
+          <property name="text">
+           <string>R:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="r_val_label">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="g_label">
+          <property name="text">
+           <string>G:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="g_val_label">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="b_label">
+          <property name="text">
+           <string>B:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="b_val_label">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="ClickableLabel" name="image_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="burn_button">
+        <property name="text">
+         <string>Burn</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -39,13 +142,20 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>991</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header>clickablelabel</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
