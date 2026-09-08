@@ -1,7 +1,7 @@
 import numpy as np
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Signal
-from PySide6.QtWidgets import QFileDialog, QLabel, QPushButton, QMessageBox
+from PySide6.QtWidgets import QFileDialog, QLabel, QPushButton, QMessageBox, QSpinBox, QTextEdit
 from PySide6.QtGui import QImage, QPixmap, QMouseEvent
 
 class ClickableLabel(QLabel):
@@ -34,22 +34,45 @@ class View:
         # find widgets by objectName
         self.open_file_button = self._view.findChild(QPushButton, "open_file_button")
         self.clear_button = self._view.findChild(QPushButton, "clear_button")
-        self.burn_button = self._view.findChild(QPushButton, "burn_button")
+        self.burn_selected_button = self._view.findChild(QPushButton, "burn_selected_button")
+        self.burn_all_button = self._view.findChild(QPushButton, "burn_all_button")
+        self.show_object_button = self._view.findChild(QPushButton, "show_object_button")
+        self.analyse_mech_button = self._view.findChild(QPushButton, "analyse_mech_button")
+        self.object_spinbox = self._view.findChild(QSpinBox, "object_spinbox")
+        self.object_label = self._view.findChild(QLabel, "object_label")
+        self.mechanic_label = self._view.findChild(QLabel, "mechanic_label")
         self.image_label = self._view.findChild(ClickableLabel, "image_label")
         self.x_pos_label = self._view.findChild(QLabel, "x_pos_label")
         self.y_pos_label = self._view.findChild(QLabel, "y_pos_label")
         self.r_val_label = self._view.findChild(QLabel, "r_val_label")
         self.g_val_label = self._view.findChild(QLabel, "g_val_label")
         self.b_val_label = self._view.findChild(QLabel, "b_val_label")
+        self.analyse_logs_text = self._view.findChild(QTextEdit, "analyse_log")
 
     def show(self):
         self._view.show()
 
-    def set_image(self, image: np.ndarray) -> None:
+    def _to_pixmap(self, image: np.ndarray) -> QPixmap:
         rgb_image = np.ascontiguousarray(image[:, :, ::-1])
         qt_image = QImage(rgb_image.data, rgb_image.shape[1], rgb_image.shape[0],
                           rgb_image.strides[0], QImage.Format.Format_RGB888).copy()
-        self.image_label.setPixmap(QPixmap.fromImage(qt_image))
+        return QPixmap.fromImage(qt_image)
+
+    def set_image(self, image: np.ndarray) -> None:
+        self.image_label.setPixmap(self._to_pixmap(image))
+
+    def set_object_image(self, image: np.ndarray) -> None:
+        self.object_label.setPixmap(self._to_pixmap(image))
+
+    def set_mechanic_image(self, image: np.ndarray) -> None:
+        self.mechanic_label.setPixmap(self._to_pixmap(image))
+
+    def set_object_range(self, count: int) -> None:
+        self.object_spinbox.setMinimum(1 if count else 0)
+        self.object_spinbox.setMaximum(max(count, 1))
+
+    def get_object_number(self) -> int:
+        return self.object_spinbox.value()
 
     def prompt_for_image_path(self) -> str:
         path, _ = QFileDialog.getOpenFileName(
@@ -69,3 +92,9 @@ class View:
 
     def show_status(self, message: str) -> None:
         self._view.statusBar().showMessage(message)
+
+    def clear_log(self) -> None:
+        self.analyse_logs_text.clear()
+
+    def append_log(self, message: str) -> None:
+        self.analyse_logs_text.append(message)
