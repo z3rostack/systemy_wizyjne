@@ -57,6 +57,8 @@ class MainWindowPresenter:
         self.view.view.th_button.clicked.connect(self.threshold_colors)
         self.view.view.open_button.clicked.connect(self.open)
         self.view.view.close_button.clicked.connect(self.close)
+        self.view.view.dist_button.clicked.connect(self.distinguish)
+
 
     def clear_left_image(self):
         self.model.clear_left_image()
@@ -168,6 +170,10 @@ class MainWindowPresenter:
 
     def close(self):
         self.model._buffer3 = self.model.close(self.model.buffer2)
+        self.view.set_buffer3_image(self.model._buffer3 )
+
+    def distinguish(self):
+        self.model._buffer3 = self.model.distinguish(self.model.buffer2)
         self.view.set_buffer3_image(self.model._buffer3 )
 
 

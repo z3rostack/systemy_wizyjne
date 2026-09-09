@@ -45,7 +45,6 @@ class Model:
         return self._buffer3
 
     def __init__(self):
-        self.data = "Hello from Model!"
 
         self._left_image = self._create_blank_image()
         self._right_image = self._create_blank_image()
@@ -143,11 +142,11 @@ class Model:
     def transform(self, operation: str):
         match operation:
             case self.AND:
-                self._buffer3 = cv2.bitwise_and(self._buffer1, self._buffer2)
+                self._buffer3 = np.bitwise_and(self._buffer1, self._buffer2)
             case self.OR:
-                self._buffer3 = cv2.bitwise_or(self._buffer1, self._buffer2)
+                self._buffer3 = np.bitwise_or(self._buffer1, self._buffer2)
             case self.XOR:
-                self._buffer3 = cv2.bitwise_xor(self._buffer1, self._buffer2)
+                self._buffer3 = np.bitwise_xor(self._buffer1, self._buffer2)
             case _:
                 raise ValueError(f"Invalid operation: {operation}")
 
@@ -274,4 +273,10 @@ class Model:
 
     def close(self, input_image: np.ndarray):    
         output_image = self.erode(self.dilate(input_image))
+        return output_image
+    
+    def distinguish(self, input_image: np.ndarray):
+        opened = self.open(input_image)
+        closed = self.close(input_image)
+        output_image = cv2.absdiff(closed, opened)
         return output_image
