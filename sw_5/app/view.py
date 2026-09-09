@@ -1,7 +1,7 @@
 import numpy as np
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Signal
-from PySide6.QtWidgets import QFileDialog, QLabel, QPushButton, QMessageBox, QSpinBox, QTextEdit
+from PySide6.QtWidgets import QApplication, QFileDialog, QLabel, QPushButton, QMessageBox, QSpinBox, QTextEdit
 from PySide6.QtGui import QImage, QPixmap, QMouseEvent
 
 class ClickableLabel(QLabel):
@@ -34,6 +34,7 @@ class View:
         # find widgets by objectName
         self.open_file_button = self._view.findChild(QPushButton, "open_file_button")
         self.clear_button = self._view.findChild(QPushButton, "clear_button")
+        self.burn_step_button = self._view.findChild(QPushButton, "burn_step_button")
         self.burn_selected_button = self._view.findChild(QPushButton, "burn_selected_button")
         self.burn_all_button = self._view.findChild(QPushButton, "burn_all_button")
         self.show_object_button = self._view.findChild(QPushButton, "show_object_button")
@@ -47,6 +48,11 @@ class View:
         self.r_val_label = self._view.findChild(QLabel, "r_val_label")
         self.g_val_label = self._view.findChild(QLabel, "g_val_label")
         self.b_val_label = self._view.findChild(QLabel, "b_val_label")
+        self.smoldering_label = self._view.findChild(QLabel, "smoldering_label")
+        self.burning_label = self._view.findChild(QLabel, "burning_label")
+        self.scorched_label = self._view.findChild(QLabel, "scorched_label")
+        self.burnt_label = self._view.findChild(QLabel, "burnt_label")
+        self.objects_found_label = self._view.findChild(QLabel, "objects_found_label")
         self.analyse_logs_text = self._view.findChild(QTextEdit, "analyse_log")
 
     def show(self):
@@ -90,11 +96,26 @@ class View:
     def show_error(self, message: str) -> None:
         QMessageBox.critical(self._view, "Error", message)
 
-    def show_status(self, message: str) -> None:
-        self._view.statusBar().showMessage(message)
+    def show_burn_result(self, result: dict) -> None:
+        self.smoldering_label.setText(f"Smoldering: {result.get('smoldering', 0)}")
+        self.burning_label.setText(f"Burning: {result.get('burning', 0)}")
+        self.scorched_label.setText(f"Scorched: {result.get('scorched', 0)}")
+        self.burnt_label.setText(f"Burnt: {result.get('burnt', 0)}")
+        self.objects_found_label.setText(f"Objects found: 0")
+
+    def show_burn_all_result(self, result: dict) -> None:
+        self.smoldering_label.setText(f"Smoldering: {result.get('smoldering', 0)}")
+        self.burning_label.setText(f"Burning: {result.get('burning', 0)}")
+        self.scorched_label.setText(f"Scorched: {result.get('scorched', 0)}")
+        self.burnt_label.setText(f"Burnt: {result.get('burnt', 0)}")
+        self.objects_found_label.setText(f"Objects found: {result.get('objects_found', 0)}")
 
     def clear_log(self) -> None:
         self.analyse_logs_text.clear()
+
+    def process_events(self) -> None:
+        """Repaint the window while a long burn is running."""
+        QApplication.processEvents()
 
     def append_log(self, message: str) -> None:
         self.analyse_logs_text.append(message)
