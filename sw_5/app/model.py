@@ -46,7 +46,9 @@ class Model:
         image = cv2.imread(path, cv2.IMREAD_COLOR)
         if image is None:
             raise ValueError(f"Cannot open image: {path}")
-        self.image = cv2.resize(image, (self.IMAGE_WIDTH, self.IMAGE_HEIGHT))
+        # nearest neighbour keeps the colors exact, so flammable/scorch pixels stay recognizable
+        self.image = cv2.resize(image, (self.IMAGE_WIDTH, self.IMAGE_HEIGHT),
+                                interpolation=cv2.INTER_NEAREST)
         self.reset_fire()
 
     def reset_fire(self) -> None:
@@ -71,14 +73,18 @@ class Model:
             self.image[y, x] = self.smoldering_color
 
     def burn_step(self) -> None:
-        """Advance the fire by one step: smoldering pixels start burning, spread, then burn out."""
+        """Advance the fire by one generation: burning pixels burn out, smoldering ones catch fire and spread."""
+        while self._burning:
+            point = self._burning.popleft()
+            self._burnt.add(point)
+            self.image[point[1], point[0]] = self.burnt_color
+
         while self._smoldering:
             point = self._smoldering.popleft()
             self._burning.append(point)
             self.image[point[1], point[0]] = self.burning_color
 
-        current_burning = list(self._burning)
-        for x, y in current_burning:
+        for x, y in self._burning:
             for neighbor_x, neighbor_y in self._neighbors(x, y):
                 pixel = self.image[neighbor_y, neighbor_x]
                 if np.array_equal(pixel, self.flammable_color):
@@ -88,10 +94,10 @@ class Model:
                     self._scorched.add((neighbor_x, neighbor_y))
                     self.image[neighbor_y, neighbor_x] = self.scorched_color
 
-        while self._burning:
-            point = self._burning.popleft()
-            self._burnt.add(point)
-            self.image[point[1], point[0]] = self.burnt_color
+    @property
+    def is_burning(self) -> bool:
+        """Tell whether any pixel is still smoldering or burning."""
+        return bool(self._smoldering or self._burning)
 
     def burn_cycle(self) -> None:
         """Run burn steps until the current region is completely burnt out."""
